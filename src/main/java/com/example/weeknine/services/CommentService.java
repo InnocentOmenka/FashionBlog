@@ -10,5 +10,7 @@ public interface CommentService {
 
     List<Comment> listOfPostComments(long pid);
     CommentDto newComment(long uid, CommentDto commentDto, long pid);
+    Comment editComment(long cid, long uid, CommentDto commentDto);
 
+    Comment deleteComment(long cid, long uid);
 }

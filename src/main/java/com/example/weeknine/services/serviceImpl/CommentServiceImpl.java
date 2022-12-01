@@ -52,6 +52,25 @@ public class CommentServiceImpl implements CommentService {
         return postComment;
     }
 
+    @Override
+    public Comment editComment(long cid, long uid, CommentDto commentDto) {
+        Comment comment = commentRepository.findById(cid).orElseThrow(()-> new InvalidUserException("Invalid"));
+        if(comment.getUser().getId()== uid){
+            comment.setCommentContent(commentDto.getCommentContent());
+            commentRepository.save(comment);
+        }
+        return comment;
+    }
+
+    @Override
+    public Comment deleteComment(long cid, long uid) {
+        Comment comment = commentRepository.findById(cid).orElseThrow(()-> new InvalidUserException("User not found"));
+        if(comment.getUser().getId() == uid){
+            commentRepository.delete(comment);
+        }
+        return comment;
+    }
+
     private CommentDto mapToDto(Comment comment){
         CommentDto commentDto = mapper.map(comment, CommentDto.class);
         return commentDto;

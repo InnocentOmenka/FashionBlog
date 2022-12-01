@@ -27,9 +27,20 @@ public class CommentController {
     }
 
 
-    @PostMapping("/makeNewComment{pid}")
-    public ResponseEntity<CommentDto> commentOnPost(@Valid @RequestParam long uid, @RequestBody CommentDto commentDto, @PathVariable long pid){
-        return new ResponseEntity<>(commentService.newComment(uid, commentDto, pid), HttpStatus.CREATED);
+    @PostMapping("/makeNewComment{cid}")
+    public ResponseEntity<CommentDto> commentOnPost(@Valid @RequestParam long uid, @RequestBody CommentDto commentDto, @PathVariable long cid){
+        return new ResponseEntity<>(commentService.newComment(uid, commentDto, cid), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/editComment/{cid}")
+    public ResponseEntity<Comment> editComment(@Valid @RequestParam long uid, @RequestBody CommentDto commentDto){
+        return new ResponseEntity<>(commentService.editComment(uid, uid, commentDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteComment/{cid}")
+    public ResponseEntity<String> deleteComment(@RequestParam long uid, @PathVariable long cid){
+        commentService.deleteComment(cid, uid);
+        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
     }
 
 }

@@ -67,6 +67,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void deleteUser(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()){
+            userRepository.delete(user.get());
+        }else {
+            throw new InvalidRequestException("User not found");
+        }
+    }
+
     public RegistrationDto mapToDto(User user){
         RegistrationDto registrationDto = mapper.map(user, RegistrationDto.class);
         return registrationDto;

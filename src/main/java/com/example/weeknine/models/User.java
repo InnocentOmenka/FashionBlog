@@ -23,6 +23,10 @@ public class User implements Serializable {
     private String email;
     private String role;
     private String password;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Post> listOfPosts = new ArrayList<>();
+    private User user;
 
-    //private List<Post> listOfPosts = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Comment> listOfComments = new ArrayList<>();
 }

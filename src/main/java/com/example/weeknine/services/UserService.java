@@ -13,4 +13,6 @@ public interface UserService {
      ResponseEntity<User> loginUser(LoginDto loginDto);
 
      ResponseEntity<RegistrationDto> editUser(long id, RegistrationDto registrationDto);
+
+     void deleteUser(long id);
 }
