@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 public class PostDto {
     private String productName;
-    private double price;
+    private String price;
     private String content;
     private String category;
     private LocalDateTime datePosted;

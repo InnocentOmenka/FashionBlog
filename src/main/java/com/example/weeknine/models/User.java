@@ -1,5 +1,6 @@
 package com.example.weeknine.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "blog_users")
+@Entity(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +24,12 @@ public class User implements Serializable {
     private String email;
     private String role;
     private String password;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Post> listOfPosts = new ArrayList<>();
-    private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Comment> listOfComments = new ArrayList<>();
+    //@JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> listOfPosts;
+
+
+//    @OneToMany(cascade = CascadeType.ALL)
+//    private List<Comment> listOfComments;
 }

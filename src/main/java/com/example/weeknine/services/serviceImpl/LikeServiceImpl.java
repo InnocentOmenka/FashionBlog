@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,36 +26,36 @@ public class LikeServiceImpl implements LikeService {
     private final PostRepository postRepository;
 
 
-    @Override
-    public void likePost(long pid, long uid) {
-        Like like = new Like();
-        User user = userRepository.findById(uid).orElseThrow(() -> new InvalidUserException("User not found"));
-        like.setUser(user);
-        likeRepository.save(like);
-        Post post = postRepository.findById(pid).orElseThrow(()-> new InvalidUserException("Invalid Id"));
-        post.getLikes().add(like);
-        postRepository.save(post);
-    }
-
-    @Override
-    public String unlikePost(long uid, long pid) {
-        User user = userRepository.findById(uid).orElseThrow(() -> new InvalidUserException("User not found"));
-        Like like = likeRepository.findByUser(user);
-        Post post = postRepository.findById(pid).orElseThrow(()-> new InvalidUserException("Invalid user"));
-        List<Like> postLikes = post.getLikes();
-        for (int i = 0; i < postLikes.size(); i++){
-            if (postLikes.get(i) == like){
-                postLikes.remove(i);
-            }
-        }
-        postRepository.save(post);
-        return "Unlike post successfully";
-    }
-
 
     public int getAllPostLikes(long pid) {
         Post post = postRepository.findById(pid).orElseThrow(() -> new InvalidUserException("User not found"));
         return post.getLikes().size();
     }
 
+    @Override
+    public String likePost(long pid, long id) {
+
+        Post post = postRepository.findById(pid).
+                orElseThrow(() -> {
+                    throw new InvalidUserException("User not found");
+                });
+
+        User user = userRepository.findById(id).
+                orElseThrow(() -> {
+                    throw new InvalidUserException("Not found");
+                });
+
+        Optional<Like> liked = likeRepository.findByPostAndUser(post, user);
+        if (liked.isPresent()) {
+            likeRepository.delete(liked.get());
+            return "User unliked post";
+        }
+
+        Like like = new Like();
+        like.setPost(post);
+        like.setUser(user);
+
+        likeRepository.save(like);
+        return "User liked Post";
+    }
 }

@@ -2,6 +2,8 @@ package com.example.weeknine.dtos;
 
 import lombok.*;
 
+import javax.validation.constraints.NotNull;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -10,5 +12,8 @@ import lombok.*;
 
 public class CommentDto {
     private String commentContent;
+
+    @NotNull
+    private Long id;
 
 }

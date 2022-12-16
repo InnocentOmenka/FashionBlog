@@ -20,27 +20,28 @@ public class CommentController {
 
     private final CommentService commentService;
 
-
     @GetMapping("/all/{pid}")
     public ResponseEntity<List<Comment>> getAllComments(@Valid @PathVariable Long pid){
         return ResponseEntity.ok(commentService.listOfPostComments(pid));
     }
 
 
-    @PostMapping("/makeNewComment{cid}")
-    public ResponseEntity<CommentDto> commentOnPost(@Valid @RequestParam long uid, @RequestBody CommentDto commentDto, @PathVariable long cid){
-        return new ResponseEntity<>(commentService.newComment(uid, commentDto, cid), HttpStatus.CREATED);
+    @PostMapping("/makeNewComment/{pid}")
+    public ResponseEntity<CommentDto> commentOnPost(@Valid @PathVariable long pid, @RequestBody CommentDto commentDto){
+        return new ResponseEntity<>(commentService.newComment(pid, commentDto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/editComment/{cid}")
-    public ResponseEntity<Comment> editComment(@Valid @RequestParam long uid, @RequestBody CommentDto commentDto){
-        return new ResponseEntity<>(commentService.editComment(uid, uid, commentDto), HttpStatus.OK);
+    @GetMapping("/comments/{pid}")
+    public ResponseEntity<List<Comment>> getAllPostComment(@PathVariable long pid){
+        List<Comment> comments = commentService.getAllPostComment(pid);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteComment/{cid}")
-    public ResponseEntity<String> deleteComment(@RequestParam long uid, @PathVariable long cid){
-        commentService.deleteComment(cid, uid);
-        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+    @DeleteMapping("/delete/{cid}")
+    public ResponseEntity<String> deleteComment(@PathVariable long cid){
+        commentService.deleteComment(cid);
+        return new ResponseEntity<>("Comment deleted successfully", HttpStatus.ACCEPTED);
     }
+
 
 }

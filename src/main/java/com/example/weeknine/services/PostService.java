@@ -7,13 +7,12 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface PostService {
+
+    ResponseEntity<PostDto> makeNewPost(long id, PostDto postDto);
+
+    PostDto editPost( long pid, PostDto postDto);
+
+    Post deletePost(long id);
+
     List<Post> getAllPosts();
-
-    ResponseEntity<PostDto> makeNewPost(long uid, PostDto postDto);
-
-    PostDto editPost(long uid, long pid, PostDto postDto);
-
-    Post deletePost(long uid, long pid);
-
-    List<Post> getUserPosts(long uid);
 }

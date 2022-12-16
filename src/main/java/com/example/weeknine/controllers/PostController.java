@@ -19,33 +19,28 @@ public class PostController {
 
     private final PostService postService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Post>> getAllPost(){
-        return ResponseEntity.ok(postService.getAllPosts());
+
+    @PostMapping("/addNewPost/{id}")
+    public ResponseEntity<PostDto> addNewPost(@Valid @PathVariable long id, @RequestBody PostDto postDto){
+        return postService.makeNewPost(id, postDto);
     }
 
-    @PostMapping("/addNewPost")
-    public ResponseEntity<PostDto> addNewPost(@Valid @RequestParam long uid, @RequestBody PostDto postDto){
-        return postService.makeNewPost(uid, postDto);
+    @GetMapping("/all-post")
+    public ResponseEntity<List<Post>> getAllPosts(){
+        List<Post> posts = postService.getAllPosts();
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
 
-    @PutMapping("/editPost{pid}")
-    public ResponseEntity<PostDto> editPost(@Valid @RequestParam long uid, @PathVariable long pid, @RequestBody PostDto postDto){
-        return new ResponseEntity<>(postService.editPost(uid, pid, postDto), HttpStatus.OK);
+    @PutMapping("/editPost/{pid}")
+    public ResponseEntity<PostDto> editPost(@Valid  @PathVariable long pid, @RequestBody PostDto postDto){
+        return new ResponseEntity<>(postService.editPost(pid, postDto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete{pid}")
-    public ResponseEntity<String> deletePost(@RequestParam long uid, @PathVariable long pid){
-        postService.deletePost(uid, pid);
+    @DeleteMapping("/delete/{pid}")
+    public ResponseEntity<String> deletePost( @PathVariable long pid){
+        postService.deletePost(pid);
         return new ResponseEntity<>("Post deleted successfully", HttpStatus.OK);
     }
-
-
-    @GetMapping("/userPosts")
-    public ResponseEntity<List<Post>> getUserPosts(@Valid @RequestParam long uid){
-        return ResponseEntity.ok(postService.getUserPosts(uid));
-    }
-
 
 }

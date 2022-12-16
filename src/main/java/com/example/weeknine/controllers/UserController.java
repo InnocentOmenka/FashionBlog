@@ -20,8 +20,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegistrationDto> registerNewUser(@RequestBody RegistrationDto registrationDto){
-        return userService.registerNewUser(registrationDto);
+    public ResponseEntity<String> registerNewUser(@RequestBody RegistrationDto registrationDto){
+         userService.registerNewUser(registrationDto);
+        return new ResponseEntity<>("Registered successfully", HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -37,6 +38,6 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id){
         userService.deleteUser(id);
-        return  new ResponseEntity<String>("User deleted succcessfully", HttpStatus.OK);
+        return  new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 }

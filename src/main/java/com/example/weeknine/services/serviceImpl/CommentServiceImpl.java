@@ -37,38 +37,43 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto newComment(long uid, CommentDto commentDto, long pid) {
-        User user = userRepository.findById(uid).orElseThrow(() -> new InvalidUserException("User not found"));
-        Post post = postRepository.findById(pid).orElseThrow(() -> new InvalidUserException("User not found"));
+    public CommentDto newComment(long pid, CommentDto commentDto) {
+        String content = commentDto.getCommentContent();
 
-        Comment comment = mapToEntity(commentDto);
-        comment.setTimePosted(LocalDateTime.now());
+        long id = commentDto.getId();
+
+        Post post = postRepository.findById(pid)
+                .orElseThrow(() -> {
+                    throw new InvalidUserException ("Not Found");
+                });
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new InvalidUserException( "Not Found"));
+        Comment comment = new Comment();
+        comment.setCommentContent(content);
+        comment.setPost(post);
         comment.setUser(user);
-
-        Comment newComment = commentRepository.save(comment);
-        post.getComments().add(newComment);
-        postRepository.save(post);
-        CommentDto postComment = mapToDto(newComment);
-        return postComment;
+        commentRepository.save(comment);
+        return commentDto;
     }
 
     @Override
-    public Comment editComment(long cid, long uid, CommentDto commentDto) {
-        Comment comment = commentRepository.findById(cid).orElseThrow(()-> new InvalidUserException("Invalid"));
-        if(comment.getUser().getId()== uid){
-            comment.setCommentContent(commentDto.getCommentContent());
-            commentRepository.save(comment);
-        }
-        return comment;
+    public String deleteComment(long cid) {
+        Comment comment = commentRepository.findById(cid).
+                orElseThrow(()-> new InvalidUserException("Comment with ID: "+ cid + "is not found"));
+        commentRepository.delete(comment);
+
+        return "Comment Deleted Successfully";
+
     }
 
+
+
     @Override
-    public Comment deleteComment(long cid, long uid) {
-        Comment comment = commentRepository.findById(cid).orElseThrow(()-> new InvalidUserException("User not found"));
-        if(comment.getUser().getId() == uid){
-            commentRepository.delete(comment);
-        }
-        return comment;
+    public List<Comment> getAllPostComment(long pid) {
+        Post post = postRepository.findById(pid)
+                .orElseThrow(() -> new InvalidUserException("Post with ID: " + pid + " is not Found"));
+
+        return commentRepository.findAllCommentByPost(post);
     }
 
     private CommentDto mapToDto(Comment comment){
