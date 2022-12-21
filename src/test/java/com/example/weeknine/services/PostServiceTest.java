@@ -37,8 +37,8 @@ class PostServiceImplTest {
     private Post postUnderTest;
     private Post post;
 
-    @MockBean
-    private Post postMock;
+//    @MockBean
+//    private Post postMock;
     private User user;
 
     @BeforeEach
